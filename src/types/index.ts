@@ -1,33 +1,37 @@
 import { User } from '.prisma/client';
 import { Request } from 'express';
 
-export type UserSafe = Omit<User, "password">;
+export interface IParamsId {
+  id: string | undefined;
+}
 
-export interface UserLogin {
+export type IUserSafe = Omit<User, "password">;
+
+export interface IUserLogin {
   email: string | undefined;
   password: string | undefined;
 }
 
-export interface RequestUser extends Request {
+export interface IRequestUser extends Request {
   user: User | undefined;
 }
 
-export interface CreateUserModel {
+export interface ICreateUserModel {
   username: string;
   email: string;
   password: string;
 }
 
-export type FilterUserRole = 'USER' | 'ADMIN' | undefined;
+export type IFilterUserRole = 'USER' | 'ADMIN' | undefined;
 
-export interface UsersQueryModel {
+export interface IUsersQueryModel {
   limit: string | undefined;
   offset: string | undefined;
   role: string | undefined;
 }
 
-export interface FilterUsersModel {
+export interface IFilterUsersModel {
   limit: number | undefined;
   offset: number | undefined;
-  role: FilterUserRole;
+  role: IFilterUserRole;
 }

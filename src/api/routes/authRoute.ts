@@ -1,14 +1,15 @@
 import express from 'express';
 import userService from '../../services/userService';
-import { CreateUserModel, UserLogin } from "../../types";
+import { ICreateUserModel, IUserLogin } from "../../types";
 import { HttpException } from '../../utils/exceptions';
 import { validateNewUser, validateCredentials } from '../../utils/validations';
 
 const router = express.Router();
 
+// eslint-disable-next-line
 router.post('/signup', async (req, res, next) => {
   try {
-    const validatedUser = validateNewUser(req.body as CreateUserModel);
+    const validatedUser = validateNewUser(req.body as ICreateUserModel);
     const user = await userService.createUser(validatedUser);
     return res.status(201).json({ ...user, password: undefined });
   } catch (error) {
@@ -16,9 +17,10 @@ router.post('/signup', async (req, res, next) => {
   }
 });
 
+// eslint-disable-next-line
 router.post('/signin', async (req, res, next) => {
   try {
-    const validatedCredentials = validateCredentials(req.body as UserLogin);
+    const validatedCredentials = validateCredentials(req.body as IUserLogin);
     const token = await userService.login(validatedCredentials);
     if (!token) {
       throw new HttpException(500, "Failed creating auth token");

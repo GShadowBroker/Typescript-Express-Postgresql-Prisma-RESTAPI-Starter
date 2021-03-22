@@ -1,13 +1,13 @@
 import { User } from '.prisma/client';
 import { prisma } from '../server';
 import { EmailUsedException, HttpException, ModelIdNotFoundException } from '../utils/exceptions';
-import { CreateUserModel, FilterUsersModel, UserLogin, UserSafe } from '../types';
+import { ICreateUserModel, IFilterUsersModel, IUserLogin, IUserSafe } from '../types';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import config from '../config';
 
 export default {
-  getAll: (filters: FilterUsersModel): Promise<User[]> => {
+  getAll: (filters: IFilterUsersModel): Promise<User[]> => {
     let roleFilter;
     if (filters.role) {
       roleFilter = { role: filters.role };
@@ -41,7 +41,7 @@ export default {
     }
     return user;
   },
-  login: async (credentials: UserLogin): Promise<string> => {
+  login: async (credentials: IUserLogin): Promise<string> => {
     const user: User | null = await prisma.user.findUnique({ where: { email: credentials.email } });
     if (!user) {
       throw new HttpException(403, "Authentication failed. Wrong or missing credentials.");
@@ -50,11 +50,11 @@ export default {
     if (!isPasswordCorrect) {
       throw new HttpException(403, "Authentication failed. Wrong or missing credentials.");
     }
-    const userSafe: UserSafe = <UserSafe>{ ...user, password: undefined };
+    const userSafe: IUserSafe = <IUserSafe>{ ...user, password: undefined };
     const token: string | null = jwt.sign(userSafe, config.tokenSecret as string);
     return token;
   },
-  createUser: async (user: CreateUserModel): Promise<User | null> => {
+  createUser: async (user: ICreateUserModel): Promise<User | null> => {
     const existingEmail: User | null = await prisma.user.findFirst({ where: { email: user.email } });
     if (existingEmail) {
       throw new EmailUsedException(user.email);

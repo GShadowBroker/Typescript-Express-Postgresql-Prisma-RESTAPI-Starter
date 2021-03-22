@@ -29,7 +29,21 @@ router.post('/signin', async (req, res, next) => {
     return res
       .cookie('ssid', token, { httpOnly: true, secure: config.env === 'production' })
       .status(200)
-      .json({ token });
+      .json({ message: 'Logged in successfully' });
+  } catch (error) {
+    return next(error);
+  }
+});
+
+router.post('/signout', (req, res, next) => {
+  try {
+    if (!req.cookies['ssid']) {
+      throw new HttpException(400, 'Invalid auth token');
+    }
+    return res
+      .clearCookie('ssid')
+      .status(200)
+      .json({ message: 'Logged out successfully' });
   } catch (error) {
     return next(error);
   }

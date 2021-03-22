@@ -8,6 +8,10 @@ import passport from 'passport';
 
 const router = express.Router();
 
+router.get('/test', passport.authenticate('jwt', { session: false }), (req, res, _next) => {
+  return res.status(200).json({ user: req.user });
+});
+
 router.get('/', passport.authenticate('jwt', { session: false }), async (req, res, next) => {
   try {
     const filters: IFilterUsersModel = validateQueryUsers(req.query as unknown as IUsersQueryModel);

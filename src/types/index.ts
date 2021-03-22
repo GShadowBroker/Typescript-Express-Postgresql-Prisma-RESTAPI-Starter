@@ -1,6 +1,16 @@
 import { User } from '.prisma/client';
 import { Request } from 'express';
 
+export type IEnv = 'production' | 'development';
+
+export interface IConfig {
+  port: number;
+  env: IEnv;
+  tokenSecret: string;
+  tokenExpiration: number;
+  cookieSecretKey: string;
+}
+
 export interface IParamsId {
   id: string | undefined;
 }

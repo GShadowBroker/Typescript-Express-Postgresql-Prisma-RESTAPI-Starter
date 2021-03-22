@@ -51,7 +51,12 @@ export default {
       throw new HttpException(403, "Authentication failed. Wrong or missing credentials.");
     }
     const userSafe: IUserSafe = <IUserSafe>{ ...user, password: undefined };
-    const token: string | null = jwt.sign(userSafe, config.tokenSecret as string);
+    const token: string | null = jwt.sign({
+      ...userSafe,
+      expiration: Date.now() + config.tokenExpiration
+    },
+      config.tokenSecret
+    );
     return token;
   },
   createUser: async (user: ICreateUserModel): Promise<User | null> => {

@@ -1,4 +1,5 @@
 import express from 'express';
+import config from '../../config';
 import userService from '../../services/userService';
 import { ICreateUserModel, IUserLogin } from "../../types";
 import { HttpException } from '../../utils/exceptions';
@@ -25,7 +26,10 @@ router.post('/signin', async (req, res, next) => {
     if (!token) {
       throw new HttpException(500, "Failed creating auth token");
     }
-    return res.status(200).json({ token });
+    return res
+      .cookie('ssid', token, { httpOnly: true, secure: config.env === 'production' })
+      .status(200)
+      .json({ token });
   } catch (error) {
     return next(error);
   }

@@ -7,6 +7,7 @@ import morgan from 'morgan';
 import cors from 'cors';
 import passport from 'passport';
 import setReqUser from './services/passport';
+import cookieParser from 'cookie-parser';
 
 export const prisma = new PrismaClient();
 const app = express();
@@ -15,6 +16,8 @@ app.disable('x-powered-by');
 app.use(express.json());
 app.use(morgan('tiny'));
 app.use(cors());
+app.use(cookieParser(config.cookieSecretKey));
+app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize());
 setReqUser(passport);
 

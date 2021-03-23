@@ -9,6 +9,7 @@ import passport from 'passport';
 const router = express.Router();
 
 router.get('/test', passport.authenticate('jwt', { session: false }), (req, res, _next) => {
+  console.log(`user`, JSON.stringify(req.user, null, 2));
   return res.status(200).json({ user: req.user });
 });
 

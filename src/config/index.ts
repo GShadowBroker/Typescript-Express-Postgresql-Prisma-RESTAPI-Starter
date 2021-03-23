@@ -8,5 +8,5 @@ export default <IConfig>{
   env: process.env.NODE_ENV || "development",
   tokenSecret: process.env.TOKEN_SECRET,
   cookieSecretKey: process.env.COOKIE_SECRET_KEY,
-  tokenExpiration: 1000 * 60 * 60 * 24 * 5 // 5 days
+  tokenExpiration: 1000 * 60 * 60 * 24 * 3 // 3 days
 };

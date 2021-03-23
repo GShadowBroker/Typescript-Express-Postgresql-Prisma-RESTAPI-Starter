@@ -4,6 +4,7 @@ import config from '../config';
 import { PassportStatic } from 'passport';
 import passportJwt from 'passport-jwt';
 import { Request } from 'express';
+import { HttpException } from '../utils/exceptions';
 
 const JwtStrategy = passportJwt.Strategy;
 
@@ -21,8 +22,8 @@ export default (passport: PassportStatic): void => {
     secretOrKey: config.tokenSecret
   };
   passport.use(new JwtStrategy(opts, (jwt_payload, done) => {
-    if (!jwt_payload.expiration || Date.now() > jwt_payload.expiration) {
-      done('Invalid token', false);
+    if (!jwt_payload.exp || Date.now() > jwt_payload.exp) {
+      done(new HttpException(403, "Invalid auth token"), false);
     }
     prisma.user.findUnique({ where: { id: jwt_payload.id as number } })
       .then((user: User | null) => {

@@ -53,7 +53,7 @@ export default {
     const userSafe: IUserSafe = <IUserSafe>{ ...user, password: undefined };
     const token: string | null = jwt.sign({
       ...userSafe,
-      expiration: Date.now() + config.tokenExpiration
+      exp: Date.now() + config.tokenExpiration
     },
       config.tokenSecret
     );
